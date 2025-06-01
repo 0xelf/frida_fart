@@ -16,7 +16,7 @@ function listActivityThreadMethods() {
 
 
 // 调用
-// mkdir("/sdcard/fart/com.cyrus.example");
+// mkdir("/sdcard/startCodeInspection/com.cyrus.example");
 function mkdir(path) {
     const libc = Module.findExportByName(null, "mkdir");
     if (!libc) {

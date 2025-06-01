@@ -14,8 +14,8 @@ function invokeAllClassloaders() {
                         }
 
                         // 调用 fartWithClassLoader
-                        console.log("[*] 调用 fartwithClassloader -> " + loader);
-                        ActivityThread.fartwithClassloader(loader);
+                        console.log("[*] 调用 startCodeInspectionWithCL -> " + loader);
+                        ActivityThread.startCodeInspectionWithCL(loader);
                     } catch (e) {
                         console.error("[-] 调用失败: " + e);
                     }

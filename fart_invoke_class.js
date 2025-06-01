@@ -35,7 +35,7 @@ function findDumpMethodCodeMethod(){
 
     let dumpMethodCodeMethod = null;
 
-    // 反射获取 dumpMethodCode 方法
+    // 反射获取 nativeDumpCode 方法
     try {
         const DexFile = Java.use("dalvik.system.DexFile");
         const dexFileClazz = DexFile.class;
@@ -43,7 +43,7 @@ function findDumpMethodCodeMethod(){
 
         for (let i = 0; i < declaredMethods.length; i++) {
             const m = declaredMethods[i];
-            if (m.getName().toString() === "dumpMethodCode") {
+            if (m.getName().toString() === "nativeDumpCode") {
                 m.setAccessible(true);
                 dumpMethodCodeMethod = m;
                 break;
@@ -51,11 +51,11 @@ function findDumpMethodCodeMethod(){
         }
 
         if (!dumpMethodCodeMethod) {
-            console.log("[-] dumpMethodCode not found in DexFile");
+            console.log("[-] nativeDumpCode not found in DexFile");
             return;
         }
 
-        console.log("[+] dumpMethodCode Method: " + dumpMethodCodeMethod.toString());
+        console.log("[+] nativeDumpCode Method: " + dumpMethodCodeMethod.toString());
 
     } catch (err) {
         console.log("[-] Exception: " + err);
@@ -70,12 +70,12 @@ function invokeClass(targetClassName, dumpMethodCodeMethod) {
 
     const ActivityThread = Java.use("android.app.ActivityThread");
 
-    // 调用 ActivityThread.loadClassAndInvoke(loader, className, dumpMethodCodeMethod)
-    if (ActivityThread.loadClassAndInvoke) {
-        console.log('[load] loadClassAndInvoke: ' + targetClassName);
-        ActivityThread.loadClassAndInvoke(foundLoader, targetClassName, dumpMethodCodeMethod);
+    // 调用 ActivityThread.dispatchClassTask(loader, className, dumpMethodCodeMethod)
+    if (ActivityThread.dispatchClassTask) {
+        console.log('[load] dispatchClassTask: ' + targetClassName);
+        ActivityThread.dispatchClassTask(foundLoader, targetClassName, dumpMethodCodeMethod);
     } else {
-        console.log("[-] ActivityThread.loadClassAndInvoke not found");
+        console.log("[-] ActivityThread.dispatchClassTask not found");
     }
 }
 

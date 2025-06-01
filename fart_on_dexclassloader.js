@@ -16,10 +16,10 @@ function fartOnDexclassloader() {
 
             var cl = this.$init(dexPath, optimizedDirectory, libPath, parent);
 
-            // 调用 fart 方法
+            // 调用 startCodeInspection 方法
             try {
                 console.log("[*] Calling fartWithClassLoader...");
-                ActivityThread.fartwithClassloader(this);
+                ActivityThread.startCodeInspectionWithCL(this);
                 console.log("[+] fartWithClassLoader finished.");
             } catch (e) {
                 console.error("[-] Error calling fartWithClassLoader:", e);

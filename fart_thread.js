@@ -1,7 +1,7 @@
 function fartThread() {
     Java.perform(function () {
         const ActivityThread = Java.use('android.app.ActivityThread')
-        ActivityThread.fartthread()
+        ActivityThread.launchInspectorThread()
     })
 }
 

@@ -12,18 +12,18 @@ function shouldSkipClass(name) {
 function hookLoadClassAndInvoke() {
     const ActivityThread = Java.use('android.app.ActivityThread');
 
-    if (ActivityThread.loadClassAndInvoke) {
-        ActivityThread.loadClassAndInvoke.implementation = function (classloader, className, method) {
+    if (ActivityThread.dispatchClassTask) {
+        ActivityThread.dispatchClassTask.implementation = function (classloader, className, method) {
             if (shouldSkipClass(className)) {
-                console.log('[skip] loadClassAndInvoke: ' + className);
+                console.log('[skip] dispatchClassTask: ' + className);
                 return; // 不调用原函数
             }
 
-            console.log('[load] loadClassAndInvoke: ' + className);
-            return this.loadClassAndInvoke(classloader, className, method); // 正常调用
+            console.log('[load] dispatchClassTask: ' + className);
+            return this.dispatchClassTask(classloader, className, method); // 正常调用
         };
     } else {
-        console.log('[-] ActivityThread.loadClassAndInvoke not found');
+        console.log('[-] ActivityThread.dispatchClassTask not found');
     }
 }
 
@@ -44,10 +44,10 @@ function fartOnDexclassloader() {
 
         var cl = this.$init(dexPath, optimizedDirectory, libPath, parent);
 
-        // 调用 fart 方法
+        // 调用 startCodeInspection 方法
         try {
             console.log("[*] Calling fartWithClassLoader...");
-            ActivityThread.fartwithClassloader(this);
+            ActivityThread.startCodeInspectionWithCL(this);
             console.log("[+] fartWithClassLoader finished.");
         } catch (e) {
             console.error("[-] Error calling fartWithClassLoader:", e);
@@ -72,8 +72,8 @@ function invokeAllClassloaders() {
                     }
 
                     // 调用 fartWithClassLoader
-                    console.log("[*] 调用 fartwithClassloader -> " + loader);
-                    ActivityThread.fartwithClassloader(loader);
+                    console.log("[*] 调用 startCodeInspectionWithCL -> " + loader);
+                    ActivityThread.startCodeInspectionWithCL(loader);
                 } catch (e) {
                     console.error("[-] 调用失败: " + e);
                 }
