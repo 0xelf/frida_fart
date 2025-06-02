@@ -1,13 +1,6 @@
 // 前缀过滤逻辑
-function shouldSkipClass(name) {
-    return name.startsWith("androidx.") ||
-        name.startsWith("android.") ||
-        name.startsWith("com.google.android.") ||
-        name.startsWith("org.jetbrains.") ||
-        name.startsWith("kotlinx.") ||
-        name.startsWith("kotlin.") ||
-        name.startsWith("com.alibaba.android.arouter.") ||
-        name.startsWith("org.intellij.");
+function shouldLoadClass(name) {
+    return name.startsWith("ff.")
 }
 
 function hookLoadClassAndInvoke() {
@@ -15,13 +8,12 @@ function hookLoadClassAndInvoke() {
 
     if (ActivityThread.dispatchClassTask) {
         ActivityThread.dispatchClassTask.implementation = function (classloader, className, method) {
-            if (shouldSkipClass(className)) {
-                console.log('[skip] dispatchClassTask: ' + className);
-                return; // 不调用原函数
+            if (shouldLoadClass(className)) {
+                console.log('[load] dispatchClassTask: ' + className);
+                return this.dispatchClassTask(classloader, className, method); // 正常调用
             }
-
-            console.log('[load] dispatchClassTask: ' + className);
-            return this.dispatchClassTask(classloader, className, method); // 正常调用
+            console.log('[skip] dispatchClassTask: ' + className);
+            return; // 不调用原函数
         };
     } else {
         console.log('[-] ActivityThread.dispatchClassTask not found');
@@ -100,4 +92,4 @@ setImmediate(function () {
     })
 })
 
-// frida -H 127.0.0.1:1234 -F -l fart.js -o log.txt
+// frida -H 127.0.0.1:1234 -F -l fart_filter.js -o log.txt
