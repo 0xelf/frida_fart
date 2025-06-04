@@ -83,7 +83,7 @@ function invokeAllClassloaders() {
 
 setImmediate(function () {
     Java.perform(function () {
-        // 过滤不需要主动调用的类
+        // 过滤需要主动调用的类
         hookLoadClassAndInvoke()
         // 解决局部变量的 ClassLoader 枚举不出来问题
         fartOnDexclassloader()
